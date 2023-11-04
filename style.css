@@ -1,0 +1,196 @@
+#lightboxModal > div.lightbox-modal-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right:0;
+    color: rgba(0,0,0,.9);
+    font-weight: 400;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    justify-content: center;
+    font-family: Helvetica, Arial, sans-serif;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 20%;
+    background-color: black;
+    width: 2rem;
+    height: 2rem;
+    padding: 1.5rem;
+}
+
+#lightboxModal > div.lightbox-modal-overlay span.header-title {
+    font-weight: 600;
+    color: #fff;
+}
+
+#lightboxModal > div.lightbox-modal-overlay span.prompt-tag:hover {
+    font-weight: 500;
+    color: #ff0;
+    transition: all 0.1s ease;
+
+}
+
+#lightboxModal > div.lightbox-modal-overlay p.prompt-contents {
+    font-weight: 400;
+    color: #fff;
+    user-select: text;
+    cursor: text;
+    width: 60%;
+    margin: auto;
+    padding-top:0.5rem;
+    padding-bottom: 0.5rem;
+    display:none;
+}
+
+#lightboxModal > div.lightbox-modal-overlay p.prompt-contents.active {
+    display:block;
+}
+
+#lightboxModal > div.lightbox-modal-overlay.modal-open {
+    background-color: rgba(0,0,0,0.8);
+    opacity: 0;
+    width: auto;
+    height: auto;
+    padding:0.25rem 0.75rem;
+}
+#lightboxModal > div.lightbox-modal-overlay.modal-open:hover {
+    opacity: 60%;
+    background-color: black;
+}
+
+
+
+#lightboxModal > .modalControls {
+    align-items: center;
+}
+
+#lightboxModal > .modalControls span:hover {
+    color: #fff;
+    filter: drop-shadow(0 0 0.1px white)
+    
+}
+#lightboxModal > .modalControls span.modalZoom  {
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-around;
+}
+
+#lightboxModal > .modalControls span.modalClose  {
+    margin-left: auto;
+    padding-right: 1rem;
+}
+#lightboxModal > .modalControls div.modal-counter  {
+    margin: auto;
+    font-family: Helvetica, Arial, sans-serif;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    visibility: hidden;
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+
+}
+
+#lightboxModal > .modalControls:hover div.modal-counter {
+    visibility:visible;
+}
+
+#lightboxModal > .modalControls span.modal-save-message {
+    background-color: rgba(8, 175, 8, 0.9);
+    color: white;
+    width: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8rem;
+    margin-top:2px;
+    font-weight:400;
+    padding: .25rem .625rem;
+    border-radius: 0.125rem;
+    transition: opacity 0.5s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#lightboxModal > .modalControls {
+    position: absolute;
+}
+
+#lightboxModal > a.modalPrev, a.modalNext {
+    padding: 64px 32px 64px 32px;
+    
+}
+
+
+#lightboxModal > a.modalPrev {
+    border-radius: 0 8px 8px 0;
+}
+
+
+#lightboxModal > a.modalNext {
+    border-radius: 8px 0 0  8px;
+}
+/* 
+#lightboxModal {
+    background-size: contain;
+} */
+
+#img2img_gallery > div > .thumbnails {
+    justify-content: start;
+    overflow-x:scroll;
+}
+
+#txt2img_gallery > div > .thumbnails {
+    justify-content: start;
+    overflow-x:scroll;
+}
+
+#lightboxModal > div.lightbox-modal-overlay > div.modal-overlay-buttons-container {
+    width: 100%;
+}
+
+div.modal-overlay-buttons-container > ul.modal-overlay-buttons-list {
+    width: 60%;
+    margin: auto;
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: column;
+
+}
+
+ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button {
+    grid-column: span 1;
+    color: #fff;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 5px 0 5px 0;
+    cursor: pointer;
+
+}
+
+ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button.active {
+   color:#aa0;
+   text-decoration-line: underline;
+}
+
+ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button:hover {
+    color: #ff0;
+}
+
+@media screen and (max-width: 768px) {
+    #lightboxModal > div.lightbox-modal-overlay p.prompt-contents {
+        width: 100%;
+    }
+
+    #lightboxModal > div.lightbox-modal-overlay {
+       
+        font-size: 0.9rem;
+    }
+    div.modal-overlay-buttons-container > ul.modal-overlay-buttons-list {
+        width: 100%;
+    
+    }
+}
