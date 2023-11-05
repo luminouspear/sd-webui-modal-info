@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", (event) => {
-  const targetDivId = "#lightboxModal";
-  const lightboxModal = document.querySelector(targetDivId);
+
+document.addEventListener("DOMContentLoaded", (createToolbarInfoevent) => {
+ 
   let lastSelectedTab = 0;
     
   function setupObserversForDynamicElements() {
@@ -9,38 +9,38 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const thumbnailGalleryContainerMutationOptions = {
       childList: true,
       subtree: true,
-      attributues: true,
+      attributes: true,
       attributeFilter: ["class"],
     };
 
     observeLightboxModal();
 
     createObserverForNode(
-      "#html_info_txt2img",
+      "#html_info_txt2img > div > #html_info_txt2img",
       bodyElement,
       promptContainerMutationOptions,
       false,
       function (addedNode) {
-        observeDivForPromptChanges(addedNode);
+        observePromptContainerForUpdates(addedNode);
       }
     );
     createObserverForNode(
-      "#html_info_img2img",
+      "#html_info_img2img > div > #html_info_img2img",
       bodyElement,
       promptContainerMutationOptions,
       false,
       function (addedNode) {
-        observeDivForPromptChanges(addedNode);
+        observePromptContainerForUpdates(addedNode);
       }
     );
     createObserverForNode(
-      "#txt2img_gallery > div > .thumbnails",
+      "#txt2img_gallery > div.grid-wrap > div.grid-container",
       bodyElement,
       promptContainerMutationOptions,
-      false,
+      true,
       function (addedNode) {
         const thumbnailsObserver = new MutationObserver((mutationsList) => {
-          getThumbnailCount("#txt2img_gallery > div > .thumbnails");
+          getThumbnailCount();
         });
 
         thumbnailsObserver.observe(
@@ -50,13 +50,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
       }
     );
     createObserverForNode(
-      "#img2img_gallery > div > .thumbnails",
+      "#img2img_gallery > div.grid-wrap > div.grid-container",
       bodyElement,
       promptContainerMutationOptions,
-      false,
+      true,
       function (addedNode) {
         const thumbnailsObserver = new MutationObserver((mutationsList) => {
-          getThumbnailCount("#img2img_gallery > div > .thumbnails");
+          getThumbnailCount();
         });
 
         thumbnailsObserver.observe(
@@ -65,13 +65,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         );
       }
     );
-    const isImgObserverPersistent = false;
 
     createObserverForNode(
       "#div.preview > img",
       bodyElement,
       promptContainerMutationOptions,
-      isImgObserverPersistent,
+      false,
       function (mainImageNode) {
         addListenerToMainImage(mainImageNode);
       }
@@ -104,6 +103,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
   
   function observeLightboxModal() {
+    const targetDivId = "#lightboxModal";
+  const lightboxModal = document.querySelector(targetDivId);
     const lightboxObserver = new MutationObserver((mutationsList, observer) => {
       for (const mutation of mutationsList) {
         if (mutation.type === "attributes" &&
@@ -112,11 +113,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
             if (isElementVisible(mutation.target)) {
 
               const overlayDiv = createOverlayDiv();
-
               lightboxModal.appendChild(overlayDiv);
-
               createToolbarInfo();
-              //observer.disconnect()
+
             } else {
               //clean up elements added in
               removeModalInfoElements();
@@ -131,10 +130,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
       lightboxObserver.observe(lightboxModal, modalConfig);
     }
 
+    lightboxModal.addEventListener('keydown', handleLightboxModalKeyDown)
+    lightboxModal.addEventListener('keydown', handleLightboxModalKeyUp)
     
   }
 
-  function observeDivForPromptChanges(container) {
+  function handleLightboxModalKeyDown(event) {
+    if (event.keyCode === 40) {
+      const modalSave = document.querySelector("#modal_save");
+      if (modalSave) {
+        event.preventDefault()
+        modalSave.click();
+      }
+    }
+  }
+
+  function handleLightboxModalKeyUp(event) {
+    if (event.keyCode === 38) { // 38 is the keyCode for the 'up arrow' key
+      const overlayDiv = document.querySelector(".lightbox-modal-overlay");
+      if (overlayDiv) {
+        event.preventDefault()
+        overlayDiv.classList.toggle('modal-open')
+      }
+    }
+  }
+
+
+  function observePromptContainerForUpdates(container) {
     if (container) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -148,32 +170,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
       observer.observe(container, { childList: true });
     }
   }
-
-  function updatePromptInfo() {
-    const prompt = getPromptFromInterface()
-    const promptParagraphs = document.querySelectorAll(".prompt-contents");
-    if (promptParagraphs) {
-      promptParagraphs.forEach((paragraph) => {
-        while (paragraph.firstChild) {
-          paragraph.removeChild(paragraph.firstChild)
-        }
-        const highlightedPrompt = getHighlightedPrompt(prompt[paragraph.dataset.index]);
-        paragraph.appendChild(highlightedPrompt)
-      });
-    }
+  
+ function addListenerToMainImage(imageContainer) {
+    imageContainer.addEventListener(
+      "click", getThumbnailCount(),
+      // function () {
+      //   const selectedGallery = isElementVisible(
+      //     document.querySelector("#txt2img_gallery > div > .thumbnails")
+      //   )
+      //     ? "#txt2img_gallery > div > .thumbnails"
+      //     : "#img2img_gallery > div > .thumbnails";
+      //   getThumbnailCount(selectedGallery);
+      //},
+      true
+    );
   }
-
-  function getPromptFromInterface() {
-    const promptText = document.querySelector(getVisibleTabPrompt()).textContent;
-    // This regular expression matches on a newline or the specific pattern
-    const regex =/(?:\nNegative prompt: |\n)/;
-    return promptText.split(regex).filter(line => line.trim());
-  }
- 
   function createOverlayDiv() {
     const prompt = getPromptFromInterface();
     const overlayDiv = document.createElement("div");
-    overlayDiv.className = "lightbox-modal-overlay modal-open";
+    overlayDiv.className = "lightbox-modal-overlay";
 
     const buttonsContainerDiv = document.createElement("div");
     buttonsContainerDiv.className = "modal-overlay-buttons-container";
@@ -245,31 +260,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
       e.stopPropagation();
     });
 
+   
     updatePromptInfo()
     return overlayDiv;
   }
 
-  function getHighlightedPrompt(inputString) {
-    const delimiter = ","
-    const fragment = document.createDocumentFragment();
-
-    const segments = inputString.replace(/\s+/g, ' ').trim().split(delimiter)
-
-    segments.forEach((segment, index, array) => {
-      const span = document.createElement('span')
-      span.className = 'prompt-tag';
-      span.textContent = segment.trim()
-
-      fragment.appendChild(span)
-
-      if (index < array.length - 1) {
-        fragment.appendChild(document.createTextNode(', '))
-      }
-    })
-  
-    return fragment;
-  }
- 
   function createToolbarInfo() {
     const saveMessage = document.createElement("span");
 
@@ -291,17 +286,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
       modalCounter.className = "modal-counter"
       saveMessage.insertAdjacentElement("afterend", modalCounter)
 
-      const selectedGallery = isElementVisible(
-        document.querySelector("#txt2img_gallery > div > .thumbnails")
-      )
-        ? "#txt2img_gallery > div > .thumbnails"
-        : "#img2img_gallery > div > .thumbnails";
-      getThumbnailCount(selectedGallery);
+      // const selectedGallery = isElementVisible(
+      //   document.querySelector("#txt2img_gallery > div > .thumbnails")
+      // )
+      //   ? "#txt2img_gallery > div > .thumbnails"
+      //   : "#img2img_gallery > div > .thumbnails";
+      getThumbnailCount();
       
 
     }
   }
 
+  function getPromptFromInterface() {
+    const promptText = document.querySelector(getVisibleTab()).textContent;
+    // This regular expression matches on a newline or the specific pattern
+    const regex =/(?:\nNegative prompt: |\n)/;
+    return promptText.split(regex).filter(line => line.trim());
+  }
+  function getHighlightedPrompt(inputString) {
+    const delimiter = ","
+    const fragment = document.createDocumentFragment();
+
+    const segments = inputString.replace(/\s+/g, ' ').trim().split(delimiter)
+
+    segments.forEach((segment, index, array) => {
+      const span = document.createElement('span')
+      span.className = 'prompt-tag';
+      span.textContent = segment.trim()
+
+      fragment.appendChild(span)
+
+      if (index < array.length - 1) {
+        fragment.appendChild(document.createTextNode(', '))
+      }
+    })
+  
+    return fragment;
+  }
+ 
   function saveButtonMessageHandler(saveMessage) {
     return function () {
       saveMessage.style.opacity = "1";
@@ -311,8 +333,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     };
   }
 
-
-  function getThumbnailCount(selector) {
+  function getThumbnailCount() {
+    // const selector = (getVisibleTab() === "#html_info_txt2img")
+    //   ? "#txt2img_gallery > div > .thumbnails"
+    //   : "#img2img_gallery > div > .thumbnails"
+      const selector = (getVisibleTab() === "#html_info_txt2img > div > #html_info_txt2img")
+      ? "#txt2img_gallery > div.grid-wrap > div.grid-container"
+      : "#img2img_gallery > div.grid-wrap > div.grid-container"
     const container = document.querySelector(selector);
     let currentThumbnailIndex = 0;
     let totalThumbnails = 0;
@@ -333,9 +360,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   }
 
+ function updatePromptInfo() {
+    const prompt = getPromptFromInterface()
+    const promptParagraphs = document.querySelectorAll(".prompt-contents");
+    if (promptParagraphs) {
+      promptParagraphs.forEach((paragraph) => {
+        while (paragraph.firstChild) {
+          paragraph.removeChild(paragraph.firstChild)
+        }
+        const highlightedPrompt = getHighlightedPrompt(prompt[paragraph.dataset.index]);
+        paragraph.appendChild(highlightedPrompt)
+      });
+    }
+  }
+
   function updateModalCounter(currentThumbnailIndex, totalThumbnails) {
     const modalCounter = document.querySelector(".modal-counter");
-   if (modalCounter) {
+    if (modalCounter) {
      modalCounter.textContent = `${
        currentThumbnailIndex + 1
      } of ${totalThumbnails}`;
@@ -344,29 +385,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
    }
   }
 
-  function addListenerToMainImage(imageContainer) {
-    imageContainer.addEventListener(
-      "click",
-      function () {
-        const selectedGallery = isElementVisible(
-          document.querySelector("#txt2img_gallery > div > .thumbnails")
-        )
-          ? "#txt2img_gallery > div > .thumbnails"
-          : "#img2img_gallery > div > .thumbnails";
-        getThumbnailCount(selectedGallery);
-      },
-      true
-    );
-  }
-
-  function getVisibleTabPrompt() {
+  function getVisibleTab() {
     const selectedTab = isElementVisible(
       document.querySelector("#html_info_txt2img")
     )
-      ? "#html_info_txt2img"
-      : "#html_info_img2img";
+      ? "#html_info_txt2img > div > #html_info_txt2img"
+      : "#html_info_img2img > div > #html_info_img2img";
     return selectedTab;
   }
+
+
 
   function isElementVisible(el) {
     const style = window.getComputedStyle(el);
@@ -377,8 +405,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
   
   function removeModalInfoElements() {
   const modalSave = document.querySelector('#modal_save');
-  modalSave.removeEventListener('click', saveButtonMessageHandler);
-
+    if (modalSave) {
+      modalSave.removeEventListener
+        ('click', saveButtonMessageHandler);
+    }
+    const lightboxModal = document.querySelector('#lightboxModal');
+    if (lightboxModal) {
+      lightboxModal.removeEventListener('keydown', handleLightboxModalKeyDown, true);
+      lightboxModal.removeEventListener('keydown', handleLightboxModalKeyUp, true);
+    }
 
   const elementsToRemove = [
     ".lightbox-modal-overlay",
@@ -392,7 +427,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   for (const elId in elementsToRemove) {
 
-    const foundElements = document
+    document
       .querySelectorAll(elementsToRemove[elId])
       .forEach((element) => {
         if (element)

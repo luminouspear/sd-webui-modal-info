@@ -3,20 +3,20 @@
     bottom: 0;
     left: 0;
     right:0;
-    color: rgba(0,0,0,.9);
+    color: rgb(0,0,0);
     font-weight: 400;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     transition: all 0.3s ease;
     justify-content: center;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: "Source Sans Pro", ui-sans-serif, "system-ui", sans-serif;
     display:flex;
     flex-direction: column;
     justify-content: center;
-    opacity: 20%;
-    background-color: black;
-    width: 2rem;
-    height: 2rem;
-    padding: 1.5rem;
+    opacity: 0;
+    background-color: black; 
+    width: auto;
+    height: auto;
+    padding: 0.75rem 0rem 1.5em 0rem;
 }
 
 #lightboxModal > div.lightbox-modal-overlay span.header-title {
@@ -24,9 +24,11 @@
     color: #fff;
 }
 
+#lightboxModal > div.lightbox-modal-overlay span.prompt-tag {
+    color: #ddd;
+}
 #lightboxModal > div.lightbox-modal-overlay span.prompt-tag:hover {
-    font-weight: 500;
-    color: #ff0;
+    color: #fff;
     transition: all 0.1s ease;
 
 }
@@ -48,15 +50,10 @@
 }
 
 #lightboxModal > div.lightbox-modal-overlay.modal-open {
-    background-color: rgba(0,0,0,0.8);
-    opacity: 0;
-    width: auto;
-    height: auto;
-    padding:0.25rem 0.75rem;
-}
-#lightboxModal > div.lightbox-modal-overlay.modal-open:hover {
     opacity: 60%;
-    background-color: black;
+}
+#lightboxModal > div.lightbox-modal-overlay:hover {
+    opacity: 60%;
 }
 
 
@@ -77,31 +74,36 @@
 }
 
 #lightboxModal > .modalControls span.modalClose  {
-    margin-left: auto;
+    margin-left: inherit;
     padding-right: 1rem;
 }
 #lightboxModal > .modalControls div.modal-counter  {
-    margin: auto;
-    font-family: Helvetica, Arial, sans-serif;
+    margin-left: auto;
+    font-family: "Source Sans Pro", ui-sans-serif, "system-ui", sans-serif;
     color: white;
-    font-size: 1.1rem;
+    background-color: rgba(0,0,0,0.2);
+    font-size: 0.8rem;
     font-weight: 500;
+    mix-blend-mode:screen;
+    padding: 0.3rem 0.75rem;
+    border-radius: 1rem;
+
+    /* transform: translateX(-50%);
     visibility: hidden;
-    transform: translateX(-50%);
     position: absolute;
-    left: 50%;
+    left: 50%; */
 
 }
 
-#lightboxModal > .modalControls:hover div.modal-counter {
+/* #lightboxModal > .modalControls:hover div.modal-counter {
     visibility:visible;
-}
+} */
 
 #lightboxModal > .modalControls span.modal-save-message {
     background-color: rgba(8, 175, 8, 0.9);
     color: white;
     width: auto;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:"Source Sans Pro", ui-sans-serif, "system-ui", sans-serif;
     font-size: .8rem;
     margin-top:2px;
     font-weight:400;
@@ -154,30 +156,38 @@ div.modal-overlay-buttons-container > ul.modal-overlay-buttons-list {
     margin: auto;
     list-style: none;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-flow: column;
+    display: flex;
+    justify-items: start;
+    align-items: center;
+    gap: 1.5rem;
 
 }
 
 ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button {
     grid-column: span 1;
     color: #fff;
-    text-align: center;
+    text-align: left;
     font-size: 0.75rem;
     font-weight: 400;
-    padding: 5px 0 5px 0;
+    padding: 3px 10px;
     cursor: pointer;
 
 }
 
 ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button.active {
-   color:#aa0;
-   text-decoration-line: underline;
+   color:#fff;
+   font-weight:600;
+   background-color:#161616;
+   padding: 3px 10px;
+   border-radius: 12px;
+
+
 }
 
 ul.modal-overlay-buttons-list > li.modal-overlay-prompt-button:hover {
-    color: #ff0;
+    background-color: #111111;
+    padding: 3px 10px;
+    border-radius: 12px;
 }
 
 @media screen and (max-width: 768px) {
