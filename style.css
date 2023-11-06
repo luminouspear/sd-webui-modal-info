@@ -100,15 +100,15 @@
 } */
 
 #lightboxModal > .modalControls span.modal-save-message {
-    background-color: rgba(8, 175, 8, 0.9);
+    background-color: rgba(0,0,0,0.2);
     color: white;
     width: auto;
     font-family:"Source Sans Pro", ui-sans-serif, "system-ui", sans-serif;
     font-size: .8rem;
-    margin-top:2px;
-    font-weight:400;
-    padding: .25rem .625rem;
-    border-radius: 0.125rem;
+    font-weight:500;
+    padding: .3rem .75rem;
+    border-radius: 1rem;
+    mix-blend-mode:screen;
     transition: opacity 0.5s;
     opacity: 0;
     pointer-events: none;

@@ -329,7 +329,7 @@ document.addEventListener("DOMContentLoaded", (createToolbarInfoevent) => {
       saveMessage.style.opacity = "1";
       setTimeout(function () {
         saveMessage.style.opacity = "0";
-      }, 1000);
+      }, 1500);
     };
   }
 
