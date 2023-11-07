@@ -62,22 +62,30 @@
     align-items: center;
 }
 
-#lightboxModal > .modalControls span:hover {
+#lightboxModal > .modalControls>  span:hover {
     color: #fff;
     filter: drop-shadow(0 0 0.1px white)
     
 }
-#lightboxModal > .modalControls span.modalZoom  {
+
+#lightboxModal > .modalControls > span.modalZoom  {
     padding-top: 6px;
     display: flex;
     justify-content: space-around;
 }
 
-#lightboxModal > .modalControls span.modalClose  {
-    margin-left: inherit;
-    padding-right: 1rem;
+#lightboxModal > .modalControls > span.modalSave  {
+    margin-left:3px;
+    margin-bottom: 3px;
 }
-#lightboxModal > .modalControls div.modal-counter  {
+
+#lightboxModal > .modalControls > span.modalClose  {
+    margin-left: inherit;
+text-align: right;
+font-size:3rem;
+}
+
+#lightboxModal > .modalControls > div.modal-counter  {
     margin-left: auto;
     font-family: "Source Sans Pro", ui-sans-serif, "system-ui", sans-serif;
     color: white;
@@ -87,19 +95,9 @@
     mix-blend-mode:screen;
     padding: 0.3rem 0.75rem;
     border-radius: 1rem;
-
-    /* transform: translateX(-50%);
-    visibility: hidden;
-    position: absolute;
-    left: 50%; */
-
 }
 
-/* #lightboxModal > .modalControls:hover div.modal-counter {
-    visibility:visible;
-} */
-
-#lightboxModal > .modalControls span.modal-save-message {
+#lightboxModal > .modalControls > span.modal-save-message {
     background-color: rgba(0,0,0,0.2);
     color: white;
     width: auto;
@@ -132,10 +130,7 @@
 #lightboxModal > a.modalNext {
     border-radius: 8px 0 0  8px;
 }
-/* 
-#lightboxModal {
-    background-size: contain;
-} */
+
 
 #img2img_gallery > div > .thumbnails {
     justify-content: start;
