@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupObserversForDynamicElements() {
     const bodyElement = document.querySelector("body");
     const promptContainerMutationOptions = { childList: true, subtree: true };
+    const modalImageMutationOptions = {
+      attributes: true,
+      attributeFilter: ["src"],
+    };
     const thumbnailGalleryContainerMutationOptions = {
       childList: true,
       subtree: true,
@@ -66,9 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     createObserverForNode(
-      "#div.preview > img",
+      "#modalImage",
       bodyElement,
-      promptContainerMutationOptions,
+      modalImageMutationOptions,
       false,
       function (mainImageNode) {
         addListenerToMainImage(mainImageNode);
@@ -118,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
               createToolbarInfo();
               isModalCreated = true;
             } else {
-
               removeModalInfoElements();
               isModalCreated = false;
             }
@@ -148,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleLightboxModalKeyUp(event) {
     if (event.keyCode === 38) {
-
       const overlayDiv = document.querySelector(".lightbox-modal-overlay");
       if (overlayDiv) {
         event.preventDefault();
@@ -173,11 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addListenerToMainImage(imageContainer) {
-    imageContainer.addEventListener(
-      "click",
-      getThumbnailCount(), true
-    );
+    imageContainer.addEventListener("click", getThumbnailCount, true);
   }
+
   function createOverlayDiv() {
     const prompt = getPromptFromInterface();
     const overlayDiv = document.createElement("div");
@@ -236,6 +236,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         lastSelectedTab = parseInt(val);
       });
+
+      //get element #lightboxModal>img#modalImage
+      //create container called modalImageContainer
+      //add class "modal-image-container"
+      //set container to be parent of element #lightboxModal>img#modalImage
+      const modalImageContainer = document.createElement("div");
+      modalImageContainer.className = "modal-image-container";
+      const modalImage = document.querySelector('#lightboxModal > img#modalImage')
+      if (modalImage) {
+        modalImage.parentNode.insertBefore(modalImageContainer, modalImage);
+        modalImageContainer.append(modalImage)
+      }
 
       ulButtonsList.appendChild(liButton);
       overlayDiv.appendChild(promptParagraph);
@@ -419,6 +431,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.removeEventListener("keydown", handleToggleGalleryCountVisibility);
 
+    const imageContainer = document.querySelector("#modalImage");
+    if (imageContainer) {
+      imageContainer.removeEventListener("click", getThumbnailCount);
+    }
+
     const elementsToRemove = [
       ".lightbox-modal-overlay",
       ".modal-save-message",
@@ -427,6 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ".modal-overlay-prompt-button",
       ".prompt-contents",
       ".modal-save-message",
+      ".modal-image-container"
     ];
 
     for (const elId in elementsToRemove) {
