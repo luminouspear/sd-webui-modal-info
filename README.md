@@ -47,6 +47,11 @@ When the total number of images generated (calculated as batch size multiplied b
 
 Let me know if you find any other issues.
 
+## Versions
+
+### 0.2 - Bug Fix
+- Resolved issue where empty prompt would cause modal to crash (now adds 'None' when positive or negative prompt are empty)
+
 ## License
 
 This project is open-sourced under the MIT License. See the [LICENSE](LICENSE) file for more details.

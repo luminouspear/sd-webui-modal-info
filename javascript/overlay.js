@@ -299,26 +299,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getPromptFromInterface() {
     const promptText = document.querySelector(getVisibleTab()).textContent;
-    const regex = /(?:\nNegative prompt: |\n)/;
-    return promptText.split(regex).filter((line) => line.trim());
+    const regex = /\n/;
+
+    let promptArray = []
+
+    if (promptText.startsWith('Negative prompt:')) {
+      promptArray.push('None')
+    } else if (promptText.startsWith('Steps:')) {
+      promptArray.splice(1, 0, "None", "None");
+    }
+
+    promptText.split(regex).filter((line) => line.trim()).forEach((line) => {
+      promptArray.push(line)
+    })
+
+    if (promptArray.length === 2) {
+      promptArray.splice(1, 0, "None");
+    }
+
+    return promptArray;
   }
   function getHighlightedPrompt(inputString) {
     const delimiter = ",";
     const fragment = document.createDocumentFragment();
 
-    const segments = inputString.replace(/\s+/g, " ").trim().split(delimiter);
-
-    segments.forEach((segment, index, array) => {
-      const span = document.createElement("span");
-      span.className = "prompt-tag";
-      span.textContent = segment.trim();
-
-      fragment.appendChild(span);
-
-      if (index < array.length - 1) {
-        fragment.appendChild(document.createTextNode(", "));
+    if (inputString) {
+      
+      if (inputString.startsWith('Negative prompt:')) {
+        inputString = inputString.replace('Negative prompt:', '');
       }
-    });
+
+      const segments = inputString.replace(/\s+/g, " ").trim().split(delimiter);
+  
+      segments.forEach((segment, index, array) => {
+        const span = document.createElement("span");
+        span.className = "prompt-tag";
+        span.textContent = segment.trim();
+       
+        fragment.appendChild(span);
+  
+        if (index < array.length - 1) {
+          fragment.appendChild(document.createTextNode(", "));
+        }
+      });
+    } else {
+      fragment.appendChild(document.createTextNode("None"));
+   }
+
 
     return fragment;
   }
